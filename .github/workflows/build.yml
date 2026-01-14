@@ -25,6 +25,8 @@ jobs:
       run: npm install
 
 
+    - name: Clean build directory
+      run: rm -rf out
     - name: Build executable
       run: npm run build
 
@@ -49,6 +51,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Clean build directory
+      run: rm -Force -Recurse out
     - name: Build executable (Windows)
       run: npm run build-win
 

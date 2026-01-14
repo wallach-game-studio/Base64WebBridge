@@ -29,12 +29,16 @@ jobs:
       run: rm -rf out
     - name: Build executable
       run: npm run build
+    - name: Copy config.json (Linux)
+      run: cp config.json out/config.json
 
     - name: Upload artifact (Linux)
       uses: actions/upload-artifact@v4
       with:
         name: base64-bridge-linux
-        path: out/base64-bridge-linux
+        path: |
+          out/base64-bridge-linux
+          out/config.json
 
   build-windows:
     runs-on: windows-latest
@@ -55,9 +59,13 @@ jobs:
       run: rm -Force -Recurse out
     - name: Build executable (Windows)
       run: npm run build-win
+    - name: Copy config.json (Windows)
+      run: Copy-Item -Path config.json -Destination out/config.json
 
     - name: Upload artifact (Windows)
       uses: actions/upload-artifact@v4
       with:
         name: base64-bridge-win
-        path: out/base64-bridge.exe
+        path: |
+          out/base64-bridge.exe
+          out/config.json

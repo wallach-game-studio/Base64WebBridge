@@ -5,7 +5,7 @@
   "main": "server.js",
   "bin": "server.js",
   "pkg": {
-    "assets": ["config.json"]
+    "assets": []
   },
   "scripts": {
     "start": "node server.js",

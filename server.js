@@ -8,7 +8,7 @@ const readFileAsync = promisify(fs.readFile);
 const statAsync = promisify(fs.stat);
 
 // --- Configuration Loading ---
-const configPath = path.join(__dirname, 'config.json');
+const configPath = path.join(process.cwd(), 'config.json');
 let config = {};
 let configLoadedFromFile = false;
 try {
@@ -32,7 +32,7 @@ if (!configLoadedFromFile) {
 const MAX_FILE_SIZE_BYTES = config.maxFileSizeMB * 1024 * 1024;
 
 // Normalize allowed roots and resolve relative paths against executable directory
-const execDir = __dirname;
+const execDir = process.cwd();
 config.allowedRoots = config.allowedRoots.map(root => {
   const resolvedRoot = path.isAbsolute(root) ? root : path.resolve(execDir, root);
   return path.normalize(resolvedRoot).toLowerCase();
@@ -87,12 +87,7 @@ app.get('/base64', async (req, res) => {
   try {
     // If filePath is an absolute path, path.resolve will handle it.
     // If it's a relative path (e.g., /testFiles/tiff.tif), resolve it against __dirname.
-    const isWindowsDrivePath = /^[a-zA-Z]:/.test(filePath);
-    if (path.isAbsolute(filePath) && isWindowsDrivePath) {
-      absolutePath = path.resolve(filePath);
-    } else {
-      absolutePath = path.join(__dirname, filePath);
-    }
+      absolutePath = path.isAbsolute(filePath) && isWindowsDrivePath ? path.resolve(filePath) : path.join(process.cwd(), filePath);
   } catch (err) {
     console.error(`[${new Date().toISOString()}] ERROR: 400 - Invalid path format: ${filePath}. Error: ${err.message}`);
     return res.status(400).json({ error: `Invalid path format: ${filePath}` });

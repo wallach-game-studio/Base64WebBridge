@@ -8,7 +8,7 @@ const readFileAsync = promisify(fs.readFile);
 const statAsync = promisify(fs.stat);
 
 // --- Configuration Loading ---
-const configPath = path.join(path.dirname(process.execPath), 'config.json');
+const configPath = path.join(__dirname, 'config.json');
 let config = {};
 let configLoadedFromFile = false;
 try {
@@ -31,8 +31,12 @@ if (!configLoadedFromFile) {
 
 const MAX_FILE_SIZE_BYTES = config.maxFileSizeMB * 1024 * 1024;
 
-// Normalize allowed roots
-config.allowedRoots = config.allowedRoots.map(root => path.normalize(root).toLowerCase());
+// Normalize allowed roots and resolve relative paths against executable directory
+const execDir = __dirname;
+config.allowedRoots = config.allowedRoots.map(root => {
+  const resolvedRoot = path.isAbsolute(root) ? root : path.resolve(execDir, root);
+  return path.normalize(resolvedRoot).toLowerCase();
+});
 
 // --- Express App Setup ---
 const app = express();
@@ -81,7 +85,14 @@ app.get('/base64', async (req, res) => {
   // Path normalization and security checks
   let absolutePath;
   try {
-    absolutePath = path.resolve(filePath);
+    // If filePath is an absolute path, path.resolve will handle it.
+    // If it's a relative path (e.g., /testFiles/tiff.tif), resolve it against __dirname.
+    const isWindowsDrivePath = /^[a-zA-Z]:/.test(filePath);
+    if (path.isAbsolute(filePath) && isWindowsDrivePath) {
+      absolutePath = path.resolve(filePath);
+    } else {
+      absolutePath = path.join(__dirname, filePath);
+    }
   } catch (err) {
     console.error(`[${new Date().toISOString()}] ERROR: 400 - Invalid path format: ${filePath}. Error: ${err.message}`);
     return res.status(400).json({ error: `Invalid path format: ${filePath}` });
@@ -93,6 +104,8 @@ app.get('/base64', async (req, res) => {
   }
 
   if (!isPathAllowed(absolutePath, config.allowedRoots)) {
+    console.error(`[${new Date().toISOString()}] DEBUG: Attempted path: ${absolutePath}`);
+    console.error(`[${new Date().toISOString()}] DEBUG: Configured allowedRoots: ${JSON.stringify(config.allowedRoots)}`);
     console.error(`[${new Date().toISOString()}] ERROR: 403 - Path not allowed by configuration: ${absolutePath}`);
     return res.status(403).json({ error: 'Access to the specified path is not allowed.' });
   }

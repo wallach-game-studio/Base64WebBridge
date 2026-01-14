@@ -1,0 +1,9 @@
+{
+  "port": 3001,
+  "allowedRoots": [
+    "C:/tests/ocr/input",
+    "/tmp",
+    "C:/workspace/webserverfilebridge/temp_for_tests"
+  ],
+  "maxFileSizeMB": 50
+}

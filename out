@@ -1,0 +1,11 @@
+$- /c/ocr_test_new : ./base64-bridge.exe
+[2026-01-14T08:52:14.856Z] INFO: Loaded configuration 
+from C:\snapshot\webserverfilebridge\config.json 
+[2026-01-14T08:52:14.879Z] Base64 File Bridge Agent starting... 
+[2026-01-14T08:52:14.879Z] Binding to: 127.0.0.1:3001 
+[2026-01-14T08:52:14.879Z] Allowed roots: [2026-01-14T08:52:14.879Z] - 
+c:\tests\ocr\input [2026-01-14T08:52:14.880Z] - \tmp 
+[2026-01-14T08:52:14.880Z] - 
+c:\workspace\webserverfilebridge\temp_for_tests 
+[2026-01-14T08:52:14.880Z] Max file size: 50MB 
+[2026-01-14T08:52:14.880Z] Ready to serve requests.

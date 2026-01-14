@@ -1,0 +1,33 @@
+{
+  "name": "base64-file-bridge-agent",
+  "version": "1.0.0",
+  "description": "A lightweight HTTP service to bridge Postman with local filesystem access for Base64 encoding files.",
+  "main": "server.js",
+  "bin": "server.js",
+  "pkg": {
+    "assets": ["config.json"]
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "pkg server.js --targets node18-linux-x64 --output out/base64-bridge-linux",
+    "build-win": "pkg server.js --targets node18-win-x64 --output out/base64-bridge.exe",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "base64",
+    "file",
+    "http",
+    "api",
+    "postman",
+    "automation"
+  ],
+  "author": "Gemini CLI",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1",
+    "node-fetch": "^3.3.2"
+  }
+}

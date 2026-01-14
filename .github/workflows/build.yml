@@ -1,0 +1,61 @@
+name: Build and Test
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Or your preferred LTS version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build executable
+      run: npm run build
+
+    - name: Upload artifact (Linux)
+      uses: actions/upload-artifact@v4
+      with:
+        name: base64-bridge-linux
+        path: out/base64-bridge-linux
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Or your preferred LTS version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build executable (Windows)
+      run: npm run build-win
+
+    - name: Upload artifact (Windows)
+      uses: actions/upload-artifact@v4
+      with:
+        name: base64-bridge-win
+        path: out/base64-bridge.exe
